@@ -1,0 +1,39 @@
+﻿CREATE OR REPLACE WRAPPER CUSTOM ds_mongo
+    DATASOURCENAME=ds_mongo
+    PARAMETERS (
+      'Pass-through session credentials' = false,
+      'Collection' = 'new',
+      'Connection String' = 'mongodb://localhost:27017/admin?readPreference=primary&appname=MongoDB%20Compass&ssl=false',
+      'Use SSL/TLS' = false
+    )
+    OUTPUTSCHEMA (
+        _id = '_id' : 'java.lang.String' (OPT) (sourcetypeid='12')  SORTABLE,
+        id_3 = '0' : 'java.lang.String' (OPT) (sourcetypeid='12')  SORTABLE,
+        id_2 = '1' : 'java.lang.String' (OPT) (sourcetypeid='12')  SORTABLE,
+        id_1 = '2' : 'java.lang.String' (OPT) (sourcetypeid='12')  SORTABLE,
+        id_0 = '3' : 'java.lang.String' (OPT) (sourcetypeid='12')  SORTABLE
+    );
+
+CREATE OR REPLACE TABLE ds_mongo I18N us_pst (
+        _id:text (sourcetypeid = '12'), 
+        id_3:text (sourcetypeid = '12'), 
+        id_2:text (sourcetypeid = '12'), 
+        id_1:text (sourcetypeid = '12'), 
+        id_0:text (sourcetypeid = '12')
+    )
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD ds_mongo(
+        I18N us_pst
+        CONSTRAINTS (
+             ADD _id (any) OPT ANY
+             ADD id_3 (any) OPT ANY
+             ADD id_2 (any) OPT ANY
+             ADD id_1 (any) OPT ANY
+             ADD id_0 (any) OPT ANY
+        )
+        OUTPUTLIST (_id, id_0, id_1, id_2, id_3
+        )
+        WRAPPER (custom ds_mongo)
+    );
+

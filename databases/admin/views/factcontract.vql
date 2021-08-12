@@ -1,0 +1,28 @@
+﻿# REQUIRES-PROPERTIES-FILE - # Do not remove this comment!
+CREATE OR REPLACE WRAPPER JDBC factcontract
+    DATASOURCENAME=ds_sql
+    CATALOGNAME='${databases.admin.views.jdbc.factcontract.CATALOGNAME}' 
+    SCHEMANAME='${databases.admin.views.jdbc.factcontract.SCHEMANAME}' 
+    RELATIONNAME='FactContract' 
+    OUTPUTSCHEMA (
+        openeddateid = 'OpenedDateID' :'java.lang.Integer' (OPT) (sourcetypedecimals='0', sourcetyperadix='10', sourcetypesize='10', sourcetypeid='4', sourcetypename='int')  SORTABLE,
+        contractnumber = 'ContractNumber' :'java.lang.Integer' (OPT) (sourcetypedecimals='0', sourcetyperadix='10', sourcetypesize='10', sourcetypeid='4', sourcetypename='int')  SORTABLE
+    );
+
+CREATE OR REPLACE TABLE factcontract I18N us_pst (
+        openeddateid:int (sourcetypeid = '4', sourcetyperadix = '10', sourcetypedecimals = '0', sourcetypesize = '10'), 
+        contractnumber:int (sourcetypeid = '4', sourcetyperadix = '10', sourcetypedecimals = '0', sourcetypesize = '10')
+    )
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD factcontract(
+        I18N us_pst
+        CONSTRAINTS (
+             ADD openeddateid (any) OPT ANY
+             ADD contractnumber (any) OPT ANY
+        )
+        OUTPUTLIST (contractnumber, openeddateid
+        )
+        WRAPPER (jdbc factcontract)
+    );
+

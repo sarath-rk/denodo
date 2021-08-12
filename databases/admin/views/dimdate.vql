@@ -1,0 +1,28 @@
+﻿# REQUIRES-PROPERTIES-FILE - # Do not remove this comment!
+CREATE OR REPLACE WRAPPER JDBC dimdate
+    DATASOURCENAME=ds_sql
+    CATALOGNAME='${databases.admin.views.jdbc.dimdate.CATALOGNAME}' 
+    SCHEMANAME='${databases.admin.views.jdbc.dimdate.SCHEMANAME}' 
+    RELATIONNAME='DimDate' 
+    OUTPUTSCHEMA (
+        dateid = 'DateID' :'java.lang.Integer' (OPT) (sourcetypedecimals='0', sourcetyperadix='10', sourcetypesize='10', sourcetypeid='4', sourcetypename='int')  SORTABLE,
+        contractnumber = 'ContractNumber' :'java.lang.Integer' (OPT) (sourcetypedecimals='0', sourcetyperadix='10', sourcetypesize='10', sourcetypeid='4', sourcetypename='int')  SORTABLE
+    );
+
+CREATE OR REPLACE TABLE dimdate I18N us_pst (
+        dateid:int (sourcetypeid = '4', sourcetyperadix = '10', sourcetypedecimals = '0', sourcetypesize = '10'), 
+        contractnumber:int (sourcetypeid = '4', sourcetyperadix = '10', sourcetypedecimals = '0', sourcetypesize = '10')
+    )
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD dimdate(
+        I18N us_pst
+        CONSTRAINTS (
+             ADD dateid (any) OPT ANY
+             ADD contractnumber (any) OPT ANY
+        )
+        OUTPUTLIST (contractnumber, dateid
+        )
+        WRAPPER (jdbc dimdate)
+    );
+

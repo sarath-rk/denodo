@@ -1,0 +1,31 @@
+﻿# REQUIRES-PROPERTIES-FILE - # Do not remove this comment!
+CREATE OR REPLACE WRAPPER JDBC tst
+    DATASOURCENAME=ds_sql
+    CATALOGNAME='${databases.admin.views.jdbc.tst.CATALOGNAME}' 
+    SCHEMANAME='${databases.admin.views.jdbc.tst.SCHEMANAME}' 
+    RELATIONNAME='tst' 
+    OUTPUTSCHEMA (
+        id = 'ID' :'java.lang.Integer' (OPT) (sourcetypedecimals='0', sourcetyperadix='10', sourcetypesize='10', sourcetypeid='4', sourcetypename='int')  NOT NULL SORTABLE,
+        indttm = 'InDtTm' :'java.time.LocalDateTime' (OPT) (sourcetypedecimals='3', sourcetypesize='23', sourcetypeid='93', sourcetypename='datetime')  SORTABLE
+    )
+    CONSTRAINT 'PK__tst__3214EC270B002AEE' PRIMARY KEY ( 'ID' )
+    INDEX 'PK__tst__3214EC270B002AEE' CLUSTER UNIQUE PRIMARY ( 'ID' );
+
+CREATE OR REPLACE TABLE tst I18N us_pst (
+        id:int (sourcetypeid = '4', sourcetyperadix = '10', sourcetypedecimals = '0', sourcetypesize = '10'), 
+        indttm:timestamp (sourcetypeid = '93', sourcetypedecimals = '3', sourcetypesize = '23')
+    )
+    CONSTRAINT 'PK__tst__3214EC270B002AEE' PRIMARY KEY ( 'id' )
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD tst(
+        I18N us_pst
+        CONSTRAINTS (
+             ADD id (any) OPT ANY
+             ADD indttm (any) OPT ANY
+        )
+        OUTPUTLIST (id, indttm
+        )
+        WRAPPER (jdbc tst)
+    );
+

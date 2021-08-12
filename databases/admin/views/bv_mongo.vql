@@ -1,0 +1,30 @@
+﻿CREATE OR REPLACE WRAPPER CUSTOM bv_mongo
+    DATASOURCENAME=ds_mongo
+    PARAMETERS (
+      'Host' = 'localhost',
+      'Port' = 27017,
+      'Pass-through session credentials' = false,
+      'Database' = 'admin',
+      'Collection' = 'new',
+      'Use SSL/TLS' = false,
+      'Fields' = '0:varchar'
+    )
+    OUTPUTSCHEMA (
+        id_0 = '0' : 'java.lang.String' (OPT) (sourcetypeid='12')  SORTABLE
+    );
+
+CREATE OR REPLACE TABLE bv_mongo I18N us_pst (
+        id_0:text (sourcetypeid = '12')
+    )
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD bv_mongo(
+        I18N us_pst
+        CONSTRAINTS (
+             ADD id_0 (any) OPT ANY
+        )
+        OUTPUTLIST (id_0
+        )
+        WRAPPER (custom bv_mongo)
+    );
+

@@ -1,0 +1,34 @@
+﻿# REQUIRES-PROPERTIES-FILE - # Do not remove this comment!
+CREATE OR REPLACE WRAPPER JDBC hotel
+    DATASOURCENAME=ds_sql
+    CATALOGNAME='${databases.admin.views.jdbc.hotel.CATALOGNAME}' 
+    SCHEMANAME='${databases.admin.views.jdbc.hotel.SCHEMANAME}' 
+    RELATIONNAME='Hotel' 
+    OUTPUTSCHEMA (
+        hotel_no = 'hotel_no' :'java.lang.String' (OPT) (sourcetypesize='255', sourcetypeid='12', sourcetypename='varchar')  NOT NULL SORTABLE,
+        name = 'name' :'java.lang.String' (OPT) (sourcetypesize='255', sourcetypeid='12', sourcetypename='varchar')  SORTABLE,
+        address = 'address' :'java.lang.String' (OPT) (sourcetypesize='255', sourcetypeid='12', sourcetypename='varchar')  SORTABLE
+    )
+    CONSTRAINT 'pk_hotel' PRIMARY KEY ( 'hotel_no' )
+    INDEX 'pk_hotel' CLUSTER UNIQUE PRIMARY ( 'hotel_no' );
+
+CREATE OR REPLACE TABLE hotel I18N us_pst (
+        hotel_no:text (sourcetypeid = '12', sourcetypesize = '255'), 
+        name:text (sourcetypeid = '12', sourcetypesize = '255'), 
+        address:text (sourcetypeid = '12', sourcetypesize = '255')
+    )
+    CONSTRAINT 'pk_hotel' PRIMARY KEY ( 'hotel_no' )
+    CACHE OFF
+    TIMETOLIVEINCACHE DEFAULT
+    ADD SEARCHMETHOD hotel(
+        I18N us_pst
+        CONSTRAINTS (
+             ADD hotel_no (any) OPT ANY
+             ADD name (any) OPT ANY
+             ADD address (any) OPT ANY
+        )
+        OUTPUTLIST (address, hotel_no, name
+        )
+        WRAPPER (jdbc hotel)
+    );
+

@@ -1,0 +1,4 @@
+﻿CREATE OR REPLACE DATASOURCE CUSTOM ds_mongo
+    CLASSNAME='com.denodo.connect.mongodb.wrapper.MongoDBWrapper'
+    JARS 'denodo-mongodb-customwrapper-7.0';
+
